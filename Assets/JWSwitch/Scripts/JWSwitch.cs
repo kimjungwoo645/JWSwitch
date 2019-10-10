@@ -7,7 +7,7 @@ public class JWSwitch : MonoBehaviour
 {
     public bool isOn; // 스위치 true = On, false = Off
     [Range(0, 3)] public float moveDuration = 3.0f;  //스위치 이동 시간
-    int a = 0;
+    int switchLimit = 0;
 
     const float totalHandleMoveLength = 72.0f;
     float halfMoveLength = totalHandleMoveLength / 2;
@@ -16,28 +16,26 @@ public class JWSwitch : MonoBehaviour
     Image backgroundImage;              //스위치 배경 이미지
     RectTransform handleRectTransform;  //스위치 핸들
 
+    //코루틴
+    Coroutine moveHandleCoroutine;
+
     void Start()
     {
         GameObject handleObject = transform.Find("Handle").gameObject;
 
         handleRectTransform = handleObject.GetComponent<RectTransform>();
 
-        isOn = true;
-
         if(isOn)
-        {
-            handleRectTransform.anchoredPosition = new Vector2(-halfMoveLength, 0); //On 위치
-        }
-        else
         {
             handleRectTransform.anchoredPosition = new Vector2(halfMoveLength, 0); //Off 위치
         }
+        else
+        {
+            handleRectTransform.anchoredPosition = new Vector2(-halfMoveLength, 0); //On 위치
+        }
     }
-
     public void OnClickSwitch()
     {
-        
-
         Vector2 fromPosition = handleRectTransform.anchoredPosition;  //시작위치
         Vector2 toPosition = (isOn) ? new Vector2(-halfMoveLength, 0) : new Vector2(halfMoveLength, 0);  //도착위치
         Vector2 distance = toPosition - fromPosition;  //이동거리
@@ -45,8 +43,14 @@ public class JWSwitch : MonoBehaviour
         float ratio = Mathf.Abs(distance.x) / totalHandleMoveLength;
         float duration = moveDuration * ratio;
 
-        StartCoroutine(moveHandle(fromPosition,toPosition,duration));
+        //핸들 이동중 취소
+        //if (moveHandleCoroutine != null)
+        //{
+        //    StopCoroutine(moveHandleCoroutine);
+        //    moveHandleCoroutine = null;
+        //}
 
+        moveHandleCoroutine = StartCoroutine(moveHandle(fromPosition,toPosition,duration));
     }
     /// <summary>
     /// 
@@ -58,9 +62,9 @@ public class JWSwitch : MonoBehaviour
     IEnumerator moveHandle(Vector2 fromPosition,Vector2 toPosition,float duration)
     {
         float currentTime = 0f;
-        if (a == 0)
+        if (switchLimit == 0)
         {
-            a += 1;
+            switchLimit += 1;
             while (currentTime < duration)
             {
 
@@ -71,10 +75,9 @@ public class JWSwitch : MonoBehaviour
                 currentTime += Time.deltaTime;
                 yield return null;
             }
-            a -= 1;
+            switchLimit -= 1;
             isOn = !isOn;
         }
     }
-
     //터치시 스위치의 배경 색상을 바꿔주는 동작
 }
