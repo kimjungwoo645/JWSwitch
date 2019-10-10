@@ -7,6 +7,7 @@ public class JWSwitch : MonoBehaviour
 {
     public bool isOn; // 스위치 true = On, false = Off
     [Range(0, 3)] public float moveDuration = 3.0f;  //스위치 이동 시간
+    int a = 0;
 
     const float totalHandleMoveLength = 72.0f;
     float halfMoveLength = totalHandleMoveLength / 2;
@@ -35,7 +36,7 @@ public class JWSwitch : MonoBehaviour
 
     public void OnClickSwitch()
     {
-        isOn = !isOn;
+        
 
         Vector2 fromPosition = handleRectTransform.anchoredPosition;  //시작위치
         Vector2 toPosition = (isOn) ? new Vector2(-halfMoveLength, 0) : new Vector2(halfMoveLength, 0);  //도착위치
@@ -57,15 +58,21 @@ public class JWSwitch : MonoBehaviour
     IEnumerator moveHandle(Vector2 fromPosition,Vector2 toPosition,float duration)
     {
         float currentTime = 0f;
-
-        while(currentTime < duration)
+        if (a == 0)
         {
-            float t = currentTime / duration;
-            Vector2 newPosition = Vector2.Lerp(fromPosition, toPosition,t);
-            handleRectTransform.anchoredPosition = newPosition;
+            a += 1;
+            while (currentTime < duration)
+            {
 
-            currentTime += Time.deltaTime;
-            yield return null;
+                float t = currentTime / duration;
+                Vector2 newPosition = Vector2.Lerp(fromPosition, toPosition, t);
+                handleRectTransform.anchoredPosition = newPosition;
+
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+            a -= 1;
+            isOn = !isOn;
         }
     }
 
