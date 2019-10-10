@@ -202,6 +202,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOn: 0
+  moveDuration: 1
+  handleColor: {r: 0, g: 0, b: 0, a: 0}
+  offBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  onBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &513654328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +224,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 513654327}
-          m_MethodName: CancelInvoke
+          m_MethodName: OnClickSwitch
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

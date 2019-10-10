@@ -12,18 +12,30 @@ public class JWSwitch : MonoBehaviour
     const float totalHandleMoveLength = 72.0f;
     float halfMoveLength = totalHandleMoveLength / 2;
 
+    //Color
+    public Color handleColor;
+    public Color offBackgroundColor;
+    public Color onBackgroundColor;
+
     Image handleImage;                  //스위치 핸들 이미지
     Image backgroundImage;              //스위치 배경 이미지
     RectTransform handleRectTransform;  //스위치 핸들
 
     //코루틴
-    Coroutine moveHandleCoroutine;
+    Coroutine moveHandleCoroutine;             //핸들 이동 코루틴
+    Coroutine changeBackGroundColorCoroutine;  //배경색 변경 코루틴
 
     void Start()
     {
+        //핸들 위치 초기화
         GameObject handleObject = transform.Find("Handle").gameObject;
-
         handleRectTransform = handleObject.GetComponent<RectTransform>();
+        //핸들 이미지
+        handleImage = handleObject.GetComponent<Image>();
+        handleImage.color = handleColor;  
+        //백그라운드 이미지
+        backgroundImage = GetComponent<Image>();
+        backgroundImage.color = offBackgroundColor;
 
         if(isOn)
         {
@@ -49,8 +61,18 @@ public class JWSwitch : MonoBehaviour
         //    StopCoroutine(moveHandleCoroutine);
         //    moveHandleCoroutine = null;
         //}
-
         moveHandleCoroutine = StartCoroutine(moveHandle(fromPosition,toPosition,duration));
+        //백그라운드 컬러 체인지 코루틴
+
+        Color fromColor = backgroundImage.color;
+        Color toColor = (isOn) ? onBackgroundColor : offBackgroundColor;
+
+        if (changeBackGroundColorCoroutine != null)
+        {
+            StopCoroutine(changeBackGroundColorCoroutine);
+            changeBackGroundColorCoroutine = null;
+        }
+        changeBackGroundColorCoroutine = StartCoroutine(changeBackGroundColor(fromColor,toColor,duration));
     }
     /// <summary>
     /// 
@@ -80,4 +102,27 @@ public class JWSwitch : MonoBehaviour
         }
     }
     //터치시 스위치의 배경 색상을 바꿔주는 동작
+    /// <summary>
+    /// 스위치 배경 함수
+    /// </summary>
+    /// <param name="fromColor">초기 색상</param>
+    /// <param name="toColor">변경할 색상</param>
+    /// <param name="duration">변경 시간</param>
+    /// <returns></returns>
+    IEnumerator changeBackGroundColor(Color fromColor,Color toColor,float duration)
+    {
+        //TODO
+        //정해진 시간동안 색상을 변경
+        float currentTime = 0f;
+        while(currentTime < duration)
+        {
+            float t = currentTime / duration;
+            Color newColor = Color.Lerp(fromColor, toColor, t);
+
+            backgroundImage.color = newColor;
+
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+    }
 }
