@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JWSwitch : MonoBehaviour
+public class JWSwitch1 : MonoBehaviour
 {
     public bool isOn; // 스위치 true = On, false = Off
     [Range(0, 3)] public float moveDuration = 3.0f;  //스위치 이동 시간
@@ -55,12 +55,6 @@ public class JWSwitch : MonoBehaviour
         float ratio = Mathf.Abs(distance.x) / totalHandleMoveLength;
         float duration = moveDuration * ratio;
 
-        //핸들 이동중 취소
-        //if (moveHandleCoroutine != null)
-        //{
-        //    StopCoroutine(moveHandleCoroutine);
-        //    moveHandleCoroutine = null;
-        //}
         moveHandleCoroutine = StartCoroutine(moveHandle(fromPosition,toPosition,duration));
         //백그라운드 컬러 체인지 코루틴
 
