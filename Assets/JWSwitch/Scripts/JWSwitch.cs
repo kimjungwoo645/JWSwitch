@@ -35,7 +35,7 @@ public class JWSwitch : MonoBehaviour
         handleImage.color = handleColor;  
         //백그라운드 이미지
         backgroundImage = GetComponent<Image>();
-        backgroundImage.color = offBackgroundColor;
+        backgroundImage.color = onBackgroundColor;
 
         if(isOn)
         {
@@ -111,8 +111,6 @@ public class JWSwitch : MonoBehaviour
     /// <returns></returns>
     IEnumerator changeBackGroundColor(Color fromColor,Color toColor,float duration)
     {
-        //TODO
-        //정해진 시간동안 색상을 변경
         float currentTime = 0f;
         while(currentTime < duration)
         {
